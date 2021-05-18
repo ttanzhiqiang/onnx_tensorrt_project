@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{c067d1b7-8f9a-4f45-ae44-e85be14023b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{61859b02-d580-4b43-a546-3920f7b618b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\centernet">
+      <UniqueIdentifier>{c590e918-42b7-4aa9-a4cf-0c186f5a145f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\classify">
+      <UniqueIdentifier>{5af79611-714a-4d9e-b668-3389a92767aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\unet">
+      <UniqueIdentifier>{cb45a9da-c30b-4df9-8b43-e14c2e9ba8eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\yolo">
+      <UniqueIdentifier>{61074f8f-d6fa-4ee1-8b95-4f798023c8d2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Trt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\common.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\calibrator.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\centernet\dcn_v2_im2col_cuda.h">
+      <Filter>src\centernet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\centernet\ctdetLayer.h">
+      <Filter>src\centernet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\dirent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\yolo\yoloPlugin.h">
+      <Filter>src\yolo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\centernet\dcn_v2.hpp">
+      <Filter>src\centernet</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Trt.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\calibrator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\classify\classify.cpp">
+      <Filter>src\classify</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\unet\unet.cpp">
+      <Filter>src\unet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\yolo\yolo_detector.cpp">
+      <Filter>src\yolo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\centernet\centernet_detection.cpp">
+      <Filter>src\centernet</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="..\src\centernet\dcn_v2_im2col_cuda.cu">
+      <Filter>src\centernet</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\src\centernet\ctdetLayer.cu">
+      <Filter>src\centernet</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\src\yolo\yoloPlugin.cu">
+      <Filter>src\yolo</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\src\centernet\dcn_v2.cu">
+      <Filter>src\centernet</Filter>
+    </CudaCompile>
+  </ItemGroup>
+</Project>

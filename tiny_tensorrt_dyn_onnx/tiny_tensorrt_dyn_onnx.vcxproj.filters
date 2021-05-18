@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{acbd99ec-a471-4496-99f4-99c6d35ebed9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{8a6afe4c-6895-4699-8a4b-c97ea2c3ad41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\centernet">
+      <UniqueIdentifier>{db182ba9-d2e8-458b-a076-044880bcb550}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\yolo">
+      <UniqueIdentifier>{b17c4f6e-990d-453d-9fd6-e2bcec6bee4d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\calibrator.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\common.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\dirent.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Trt.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\utils.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\centernet\ctdetLayer.h">
+      <Filter>src\centernet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\centernet\dcn_dyn_v2.hpp">
+      <Filter>src\centernet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\centernet\dcn_v2_im2col_cuda.h">
+      <Filter>src\centernet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\yolo\yolo_dyn_Plugin.h">
+      <Filter>src\yolo</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\calibrator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\common.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Trt.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\centernet\centernet_dyn_detection.cpp">
+      <Filter>src\centernet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\yolo\yolo_dyn_detector.cpp">
+      <Filter>src\yolo</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="..\src\centernet\ctdetLayer.cu">
+      <Filter>src\centernet</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\src\centernet\dcn_dyn_v2.cu">
+      <Filter>src\centernet</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\src\centernet\dcn_v2_im2col_cuda.cu">
+      <Filter>src\centernet</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\src\yolo\yolo_dyn_Plugin.cu">
+      <Filter>src\yolo</Filter>
+    </CudaCompile>
+  </ItemGroup>
+</Project>

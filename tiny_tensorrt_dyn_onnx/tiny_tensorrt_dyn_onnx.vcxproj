@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\calibrator.h" />
+    <ClInclude Include="..\include\common.h" />
+    <ClInclude Include="..\include\dirent.h" />
+    <ClInclude Include="..\include\Trt.h" />
+    <ClInclude Include="..\include\utils.h" />
+    <ClInclude Include="..\src\centernet\ctdetLayer.h" />
+    <ClInclude Include="..\src\centernet\dcn_dyn_v2.hpp" />
+    <ClInclude Include="..\src\centernet\dcn_v2_im2col_cuda.h" />
+    <ClInclude Include="..\src\yolo\yolo_dyn_Plugin.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\calibrator.cpp" />
+    <ClCompile Include="..\src\centernet\centernet_dyn_detection.cpp" />
+    <ClCompile Include="..\src\common.cpp" />
+    <ClCompile Include="..\src\Trt.cpp" />
+    <ClCompile Include="..\src\yolo\yolo_dyn_detector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="..\src\centernet\ctdetLayer.cu" />
+    <CudaCompile Include="..\src\centernet\dcn_dyn_v2.cu" />
+    <CudaCompile Include="..\src\centernet\dcn_v2_im2col_cuda.cu" />
+    <CudaCompile Include="..\src\yolo\yolo_dyn_Plugin.cu" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{6E49C10F-5371-429A-B3D1-0970332F9BB8}</ProjectGuid>
+    <RootNamespace>tiny_tensorrt_dyn_onnx</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 11.1.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(Solutiondir)include;$(Solutiondir)src;$(Solutiondir)3rdparty\opencv3.4.0\include;$(Solutiondir)3rdparty\TensorRT-7.2.2.3\include;$(Solutiondir)3rdparty\onnx-tensorrt\include;$(Solutiondir)3rdparty\Log\include;$(Solutiondir)3rdparty\protobuf-3.11.4\include;$(Solutiondir)src\centernet;$(IncludePath)</IncludePath>
+    <LibraryPath>$(Solutiondir)3rdparty\opencv3.4.0\lib\vc15;$(Solutiondir)3rdparty\onnx-tensorrt\lib;$(Solutiondir)3rdparty\TensorRT-7.2.2.3\lib;$(Solutiondir)3rdparty\protobuf-3.11.4\lib;$(Solutiondir)3rdparty\onnx\lib;$(Solutiondir)3rdparty\Log\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(Solutiondir)include;$(Solutiondir)src;$(Solutiondir)3rdparty\opencv3.4.0\include;$(Solutiondir)3rdparty\TensorRT-7.2.2.3\include;$(Solutiondir)3rdparty\onnx-tensorrt\include;$(Solutiondir)3rdparty\Log\include;$(Solutiondir)3rdparty\protobuf-3.11.4\include;$(Solutiondir)src\centernet;$(IncludePath)</IncludePath>
+    <LibraryPath>$(Solutiondir)3rdparty\opencv3.4.0\lib\vc15;$(Solutiondir)3rdparty\onnx-tensorrt\lib;$(Solutiondir)3rdparty\TensorRT-7.2.2.3\lib;$(Solutiondir)3rdparty\protobuf-3.11.4\lib;$(Solutiondir)3rdparty\onnx\lib;$(Solutiondir)3rdparty\Log\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>cublas.lib;static_slogd.lib;onnxd.lib;onnx_protod.lib;opencv_world340d.lib;nvonnxparser_staticd.lib;libprotobufd.lib;myelin64_1.lib;nvinfer_plugin.lib;nvinfer.lib;cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <CudaCompile>
+      <TargetMachinePlatform>64</TargetMachinePlatform>
+      <CodeGeneration>compute_75,sm_75</CodeGeneration>
+    </CudaCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;WIN64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>cublas.lib;static_slog.lib;onnx.lib;onnx_proto.lib;opencv_world340.lib;nvonnxparser_static.lib;libprotobuf.lib;myelin64_1.lib;nvinfer_plugin.lib;nvinfer.lib;cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <CudaCompile>
+      <TargetMachinePlatform>64</TargetMachinePlatform>
+      <CodeGeneration>compute_75,sm_75</CodeGeneration>
+    </CudaCompile>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 11.1.targets" />
+  </ImportGroup>
+</Project>

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tiny_tensorrt_onnx", "tiny_tensorrt_onnx\tiny_tensorrt_onnx.vcxproj", "{7E0F4439-59D8-4A07-A8E2-30B2F6FD3E95}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tiny_tensorrt_dyn_onnx", "tiny_tensorrt_dyn_onnx\tiny_tensorrt_dyn_onnx.vcxproj", "{6E49C10F-5371-429A-B3D1-0970332F9BB8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7E0F4439-59D8-4A07-A8E2-30B2F6FD3E95}.Debug|x64.ActiveCfg = Debug|x64
+		{7E0F4439-59D8-4A07-A8E2-30B2F6FD3E95}.Debug|x64.Build.0 = Debug|x64
+		{7E0F4439-59D8-4A07-A8E2-30B2F6FD3E95}.Release|x64.ActiveCfg = Release|x64
+		{7E0F4439-59D8-4A07-A8E2-30B2F6FD3E95}.Release|x64.Build.0 = Release|x64
+		{6E49C10F-5371-429A-B3D1-0970332F9BB8}.Debug|x64.ActiveCfg = Debug|x64
+		{6E49C10F-5371-429A-B3D1-0970332F9BB8}.Debug|x64.Build.0 = Debug|x64
+		{6E49C10F-5371-429A-B3D1-0970332F9BB8}.Release|x64.ActiveCfg = Release|x64
+		{6E49C10F-5371-429A-B3D1-0970332F9BB8}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2A9B8D14-72F1-48A3-A6A8-3FA07A4CD1E1}
+	EndGlobalSection
+EndGlobal
