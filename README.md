@@ -109,6 +109,9 @@ https://github.com/NVIDIA/TensorRT/tree/master/samples/opensource/sampleDynamicR
 
 https://github.com/NVIDIA-AI-IOT/deepstream_reference_apps
 
+https://github.com/enazoe/yolo-tensorrt.git
+
+https://github.com/zerollzeng/tiny-tensorrt.git
 ## Contact
 
 <img src="./model/result/weixin.jpg" style="zoom:50%;" />
