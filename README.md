@@ -35,8 +35,15 @@ you have the trained model file from the darknet/libtorch/pytorch
 ## Features
 
 - [x] inequal net width and height
+
 - [x] batch inference
+
+  ------
+
+  onnx-tensorrt batch inference : onnx re-export(batch:2)
+
 - [x] support FP32,FP16,INT8
+
 - [x] dynamic input size(tiny_tensorrt_dyn_onnx)
 
 ## windows10
