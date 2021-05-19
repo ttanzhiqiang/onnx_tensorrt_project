@@ -62,7 +62,7 @@ you have the trained model file from the darknet/libtorch/pytorch
 
     step1: https://github.com/onnx/onnx-tensorrt.git
 
-    step2: https://drive.google.com/drive/folders/1DndiqyCZ796p3-xXI3O4AMCIGcUWQ1q2?usp=sharing
+    step2: https://drive.google.com/drive/folders/1DndiqyCZ796p3-xXI3O4AMCIGcUWQ1q2?usp=sharing or https://share.weiyun.com/CJCwngAM
 
     step3: **builtin_op_importers.cpp** replace onnx-tensorrt\builtin_op_importers.cpp
 
@@ -72,11 +72,9 @@ you have the trained model file from the darknet/libtorch/pytorch
 
 ## Model and 3rdparty
 
-model : https://drive.google.com/drive/folders/1KzBjmCOG9ghcq9L6-iqfz6QwBQq6Hl4_?usp=sharing or 
+model : https://drive.google.com/drive/folders/1KzBjmCOG9ghcq9L6-iqfz6QwBQq6Hl4_?usp=sharing or https://share.weiyun.com/td9CRDhW
 
-[yunpan]: https://share.weiyun.com/td9CRDhW
-
-3rdparty:https://drive.google.com/drive/folders/1SddUgQ5kGlv6dDGPqnVWZxgCoBY85rM2?usp=sharing
+3rdparty:https://drive.google.com/drive/folders/1SddUgQ5kGlv6dDGPqnVWZxgCoBY85rM2?usp=sharing or https://share.weiyun.com/WEZ3TGtb
 
 ## API
 

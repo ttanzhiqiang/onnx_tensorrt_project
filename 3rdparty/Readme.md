@@ -1,4 +1,4 @@
-https://drive.google.com/drive/folders/1SddUgQ5kGlv6dDGPqnVWZxgCoBY85rM2?usp=sharing
+https://drive.google.com/drive/folders/1SddUgQ5kGlv6dDGPqnVWZxgCoBY85rM2?usp=sharing or https://share.weiyun.com/WEZ3TGtb
 
 3rdparty/Log/
 3rdparty/onnx/
