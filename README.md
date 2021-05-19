@@ -72,7 +72,9 @@ you have the trained model file from the darknet/libtorch/pytorch
 
 ## Model and 3rdparty
 
-model : https://drive.google.com/drive/folders/1KzBjmCOG9ghcq9L6-iqfz6QwBQq6Hl4_?usp=sharing
+model : https://drive.google.com/drive/folders/1KzBjmCOG9ghcq9L6-iqfz6QwBQq6Hl4_?usp=sharing or 
+
+[yunpan]: https://share.weiyun.com/td9CRDhW
 
 3rdparty:https://drive.google.com/drive/folders/1SddUgQ5kGlv6dDGPqnVWZxgCoBY85rM2?usp=sharing
 
