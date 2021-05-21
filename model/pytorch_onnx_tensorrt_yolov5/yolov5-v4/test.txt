@@ -1,0 +1,19 @@
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.1
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.15
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.2
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.25
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.3
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.35
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.4
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.45
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.5
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.55
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.6
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.65
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.7
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.75
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.8
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.85
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.9
+python test.py --weights runs/train/s_xinglixiang/weights/last.pt --data data/coco_xinglixiang.yaml --img 416 --conf-thres 0.95

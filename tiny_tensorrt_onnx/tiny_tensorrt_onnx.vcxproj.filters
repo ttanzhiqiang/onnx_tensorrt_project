@@ -19,6 +19,9 @@
     <Filter Include="src\yolo">
       <UniqueIdentifier>{61074f8f-d6fa-4ee1-8b95-4f798023c8d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\yolov5">
+      <UniqueIdentifier>{53a20678-8657-4e0e-abbf-6d888ad24ca9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Trt.h">
@@ -48,6 +51,9 @@
     <ClInclude Include="..\src\centernet\dcn_v2.hpp">
       <Filter>src\centernet</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\yolov5\SiLUPlugin.h">
+      <Filter>src\yolov5</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Trt.cpp">
@@ -71,6 +77,12 @@
     <ClCompile Include="..\src\centernet\centernet_detection.cpp">
       <Filter>src\centernet</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\yolov5\SiLUPlugin.cpp">
+      <Filter>src\yolov5</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\yolov5\yolov5_detector.cpp">
+      <Filter>src\yolov5</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="..\src\centernet\dcn_v2_im2col_cuda.cu">
@@ -84,6 +96,9 @@
     </CudaCompile>
     <CudaCompile Include="..\src\centernet\dcn_v2.cu">
       <Filter>src\centernet</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\src\yolov5\SiLU.cu">
+      <Filter>src\yolov5</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

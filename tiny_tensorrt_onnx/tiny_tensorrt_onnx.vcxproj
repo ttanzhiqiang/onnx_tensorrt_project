@@ -19,6 +19,7 @@
     <ClInclude Include="..\src\centernet\ctdetLayer.h" />
     <ClInclude Include="..\src\centernet\dcn_v2.hpp" />
     <ClInclude Include="..\src\centernet\dcn_v2_im2col_cuda.h" />
+    <ClInclude Include="..\src\yolov5\SiLUPlugin.h" />
     <ClInclude Include="..\src\yolo\yoloPlugin.h" />
   </ItemGroup>
   <ItemGroup>
@@ -28,12 +29,15 @@
     <ClCompile Include="..\src\common.cpp" />
     <ClCompile Include="..\src\Trt.cpp" />
     <ClCompile Include="..\src\unet\unet.cpp" />
+    <ClCompile Include="..\src\yolov5\SiLUPlugin.cpp" />
+    <ClCompile Include="..\src\yolov5\yolov5_detector.cpp" />
     <ClCompile Include="..\src\yolo\yolo_detector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="..\src\centernet\ctdetLayer.cu" />
     <CudaCompile Include="..\src\centernet\dcn_v2.cu" />
     <CudaCompile Include="..\src\centernet\dcn_v2_im2col_cuda.cu" />
+    <CudaCompile Include="..\src\yolov5\SiLU.cu" />
     <CudaCompile Include="..\src\yolo\yoloPlugin.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

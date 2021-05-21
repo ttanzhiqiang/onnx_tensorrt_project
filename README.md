@@ -1,6 +1,6 @@
 # ONNX-TensorRT
 
-# Yolov4/Yolov3/CenterNet/Classify/Unet Implementation
+# Yolov5(4.0)/Yolov5(5.0)/Yolov4/Yolov3/CenterNet/Classify/Unet Implementation
 
 
 
@@ -27,6 +27,8 @@ you have the trained model file from the darknet/libtorch/pytorch
 
 ![](./model/result/onnx_trt.jpg)
 
+- [x] yolov5-4.0(5s/5m/5s/5x)
+- [x] yolov5-5.0(5s/5m/5s/5x)
 - [x] yolov4 , yolov4-tiny
 - [x] yolov3 , yolov3-tiny
 - [x] centernet

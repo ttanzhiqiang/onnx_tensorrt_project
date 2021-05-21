@@ -1,0 +1,39 @@
+# parameters
+nc: 80  # number of classes
+depth_multiple: 1.0  # model depth multiple
+width_multiple: 1.0  # layer channel multiple
+
+# anchors
+anchors:
+  - [10,14, 23,27, 37,58]  # P4/16
+  - [81,82, 135,169, 344,319]  # P5/32
+
+backbone:
+  [[-1,1,Conv,[32,3,2,None,1,nn.LeakyReLU]], # 0
+   [-1,1,Conv,[64, 3, 2,None,1,nn.LeakyReLU]],
+   [-1,1,Conv,[64,3,1,None,1,nn.LeakyReLU]], # 2
+   [-1,1,Ctiny,[64]],
+   [[2, -1], 1, Concat, [1]],
+   [-1, 1, nn.MaxPool2d, [2, 2, 0]],
+   [-1,1,Conv,[128,3,1,None,1,nn.LeakyReLU]], # 6
+   [-1,1,Ctiny,[128]],
+   [[6, -1], 1, Concat, [1]],
+   [-1, 1, nn.MaxPool2d, [2, 2, 0]],
+   [-1,1,Conv,[256,3,1,None,1,nn.LeakyReLU]], # 10
+   [-1,1,Ctiny,[256]], # 11
+   [[10, -1], 1, Concat, [1]],
+   [-1, 1, nn.MaxPool2d, [2, 2, 0]],
+  ]
+
+head:
+  [[-1,1,Conv,[512,3,1,None,1,nn.LeakyReLU]],
+   [-1,1,Conv,[256,1,1,None,1,nn.LeakyReLU]],
+   [-1,1,Conv,[512,3,1,None,1,nn.LeakyReLU]], #16
+
+   [-2,1,Conv,[128,1,1,None,1,nn.LeakyReLU]],
+   [-1, 1, nn.Upsample, [None, 2, 'nearest']],
+   [[-1, 11], 1, Concat, [1]],
+   [-1,1,Conv,[256,3,1,None,1,nn.LeakyReLU]], #20
+
+   [[20, 16], 1, Detect, [nc, anchors]],
+  ]

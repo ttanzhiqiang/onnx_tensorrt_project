@@ -13,6 +13,9 @@
     <Filter Include="src\yolo">
       <UniqueIdentifier>{b17c4f6e-990d-453d-9fd6-e2bcec6bee4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\yolov5">
+      <UniqueIdentifier>{cc3c3c71-e928-4453-8d77-318255c91c78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\calibrator.h">
@@ -58,6 +61,9 @@
     </ClCompile>
     <ClCompile Include="..\src\yolo\yolo_dyn_detector.cpp">
       <Filter>src\yolo</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\yolov5\yolov5_dyn_detector.cpp">
+      <Filter>src\yolov5</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
