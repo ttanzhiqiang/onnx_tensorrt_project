@@ -1,3 +1,4 @@
+https://drive.google.com/drive/folders/1KzBjmCOG9ghcq9L6-iqfz6QwBQq6Hl4_?usp=sharing or https://share.weiyun.com/td9CRDhW
 #yolov5-4.0
 
 open yolov5-v4\models\export_onnx.py
