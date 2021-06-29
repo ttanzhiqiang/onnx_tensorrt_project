@@ -79,6 +79,14 @@ you have the trained model file from the darknet/libtorch/pytorch
 | darknet53 | 224*224 | 2080ti | 3.53ms  | 1.84ms  | 1.71ms  |
 | darknet53 | 224*224 |  3070  | 4.29ms  | 2.16ms  | 1.75ms  |
 
+
+
+#### x64(inference / detect time)
+
+|   model   |  size   |  gpu   | fp32(inference/detect) | fp16(inference/detect) | INT8(inference/detect) |
+| :-------: | :-----: | :----: | :--------------------: | :--------------------: | :--------------------: |
+| centernet | 512x512 | 2080ti |     17.7ms/41.7ms      |     15.7ms/38.5ms      |    14.10ms/37.89ms     |
+
 </details>
 
 ## windows10

@@ -4,6 +4,7 @@
 #include <common.h>
 #include "Trt.h"
 #include "ctdetLayer.h"
+#include "class_timer.hpp"
 struct Result
 {
 	int		 id = -1;
@@ -179,14 +180,14 @@ public:
 
 	std::vector<std::vector<BBoxInfo>> reprocessing()
 	{
+		Timer timer;
 		std::vector<std::vector<BBoxInfo>> m_batch_box;
-		m_batch_box.resize(m_BatchSize);
-		for (int i_BatchSize = 0; i_BatchSize < m_BatchSize; i_BatchSize++)
+		m_batch_box.reserve(m_BatchSize);
+		for (uint32_t i_BatchSize = 0; i_BatchSize < m_BatchSize; i_BatchSize++)
 		{
 			void* cudaOutputBuffer;
-			std::vector<float> outputData;
 			int outputBufferSize = onnx_net->mBindingSize[1] * 6 / m_BatchSize;
-			outputData.resize(outputBufferSize);
+			std::unique_ptr<float[]> outputData(new float[outputBufferSize]);
 			cudaMalloc(&cudaOutputBuffer, outputBufferSize);
 			CUDA_CHECK(cudaMemset(cudaOutputBuffer, 0, sizeof(float)));
 			const float* m_hm_hostBuffer = static_cast<const float*>(onnx_net->mBinding[1]) + i_BatchSize * m_OutputTensors[0].volume / m_BatchSize;
@@ -194,16 +195,14 @@ public:
 			const float* m_wh_hostBuffer = static_cast<const float*>(onnx_net->mBinding[3]) + i_BatchSize * m_OutputTensors[2].volume / m_BatchSize;
 			CTdetforward_gpu(m_hm_hostBuffer, m_reg_hostBuffer, m_wh_hostBuffer, static_cast<float*>(cudaOutputBuffer),
 				m_InputW / 4, m_InputH / 4, m_Classes, m_kernelSize, m_Threshold);
-			CUDA_CHECK(cudaMemcpyAsync(outputData.data(), cudaOutputBuffer, outputBufferSize, cudaMemcpyDeviceToHost, mCudaStream));
+			CUDA_CHECK(cudaMemcpyAsync(outputData.get(), cudaOutputBuffer, outputBufferSize, cudaMemcpyDeviceToHost, mCudaStream));
 			std::vector<BBoxInfo> result;
 			int num_det = static_cast<int>(outputData[0]);
 			result.resize(num_det);
 			memcpy(result.data(), &outputData[1], num_det * sizeof(BBoxInfo));
-			m_batch_box[i_BatchSize] = result;
-			outputData.clear();
+			m_batch_box.push_back(result);
 			cudaFree(cudaOutputBuffer);
 		}
-
 		return m_batch_box;
 	}
 
@@ -253,8 +252,15 @@ public:
 			data.insert(data.end(), ptr2, ptr2 + m_InputH * m_InputW);
 			data.insert(data.end(), ptr3, ptr3 + m_InputH * m_InputW);
 		}
+		Timer timer;
+		timer.reset();
 		doInference(data, vec_image.size());
+		double t_doInference = timer.elapsed();
+		std::cout << "doInference:"  << t_doInference << "ms" << std::endl;
+		timer.reset();
 		std::vector < std::vector<BBoxInfo>> m_batch_box = reprocessing();
+		double reprocessing_t = timer.elapsed();
+		std::cout << "reprocessing:" << reprocessing_t << "ms" << std::endl;
 		for (uint32_t i = 0; i < vec_image.size(); ++i)
 		{
 			auto curImage = vec_image.at(i);
@@ -291,10 +297,10 @@ int main()
 	CenterNetDectector m_CenterNetDectector;
 	Config m_config;
 	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_centernet\\ctdet_coco_dla_2x.onnx";
-	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_centernet\\ctdet_coco_dla_2x_fp32_batch_1.engine";
+	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_centernet\\ctdet_coco_dla_2x_int8_batch_1.engine";
 	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_centernet\\image\\";
 	m_config.maxBatchSize = 1;
-	m_config.mode = 0;
+	m_config.mode = 2;
 	m_config.calibration_width = 512;
 	m_config.calibration_height = 512;
 	m_CenterNetDectector.init(m_config);
@@ -306,7 +312,28 @@ int main()
 	//cv::Mat image_1 = cv::imread(filename_1);
 	batch_img.push_back(image);
 	//batch_img.push_back(image_1);
-	m_CenterNetDectector.detect(batch_img, batch_res);
+	//float all_time = 0.0;
+	float all_time = 0.0;
+	time_t start = time(0);
+	Timer timer;
+	int m = 100;
+	for (int i = 0; i < m; i++)
+	{
+		//timer.reset();
+		clock_t start, end;
+		timer.reset();
+		m_CenterNetDectector.detect(batch_img, batch_res);
+		double t = timer.elapsed();
+		std::cout << i << ":" << t << "ms" << std::endl;
+		if (i > 0)
+		{
+			all_time += t;
+		}
+	}
+	std::cout << m << "次 time:" << all_time << " ms" << std::endl;
+	std::cout << "1次 time:" << all_time / m << " ms" << std::endl;
+	std::cout << "FPS::" << 1000 / (all_time / m) << std::endl;
+	
 	//disp
 	for (int i = 0; i < batch_img.size(); ++i)
 	{
