@@ -75,7 +75,7 @@ you have the trained model file from the darknet/libtorch/pytorch
 | yolov5 5s | 608x608 | 2080ti | 24.47ms | 22.46ms |    /    |
 | yolov5 5m | 608x608 | 2080ti | 30.61ms | 24.02ms |    /    |
 | yolov5 5l | 608x608 | 2080ti | 32.58ms | 25.84ms |    /    |
-| yolov5 5x | 608x608 | 2080ti | 41.18ms | 29.75ms |    /    |
+| yolov5 5x | 608x608 | 2080ti | 40.69ms | 29.81ms |    /    |
 | darknet53 | 224*224 | 2080ti | 3.53ms  | 1.84ms  | 1.71ms  |
 | darknet53 | 224*224 |  3070  | 4.29ms  | 2.16ms  | 1.75ms  |
 
@@ -85,7 +85,7 @@ you have the trained model file from the darknet/libtorch/pytorch
 
 |   model   |  size   |  gpu   | fp32(inference/detect) | fp16(inference/detect) | INT8(inference/detect) |
 | :-------: | :-----: | :----: | :--------------------: | :--------------------: | :--------------------: |
-| centernet | 512x512 | 2080ti |     17.7ms/41.7ms      |     15.7ms/38.5ms      |    14.10ms/37.89ms     |
+| centernet | 512x512 | 2080ti |     17.8ms/39.7ms      |     15.7ms/36.49ms     |    14.37ms/36.34ms     |
 
 </details>
 

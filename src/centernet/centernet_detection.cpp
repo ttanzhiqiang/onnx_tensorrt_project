@@ -195,7 +195,8 @@ public:
 			const float* m_wh_hostBuffer = static_cast<const float*>(onnx_net->mBinding[3]) + i_BatchSize * m_OutputTensors[2].volume / m_BatchSize;
 			CTdetforward_gpu(m_hm_hostBuffer, m_reg_hostBuffer, m_wh_hostBuffer, static_cast<float*>(cudaOutputBuffer),
 				m_InputW / 4, m_InputH / 4, m_Classes, m_kernelSize, m_Threshold);
-			CUDA_CHECK(cudaMemcpyAsync(outputData.get(), cudaOutputBuffer, outputBufferSize, cudaMemcpyDeviceToHost, mCudaStream));
+			//CUDA_CHECK(cudaMemcpyAsync(outputData.get(), cudaOutputBuffer, outputBufferSize, cudaMemcpyDeviceToHost, mCudaStream));
+			cudaMemcpyAsync(outputData.get(), cudaOutputBuffer, outputBufferSize, cudaMemcpyDeviceToHost, mCudaStream);
 			std::vector<BBoxInfo> result;
 			int num_det = static_cast<int>(outputData[0]);
 			result.resize(num_det);
@@ -236,7 +237,7 @@ public:
 		std::vector<BatchResult>& vec_batch_result)
 	{
 		vec_batch_result.clear();
-		vec_batch_result.resize(vec_image.size());
+		vec_batch_result.reserve(vec_image.size());
 		std::vector<float>data;
 		for (const auto& img : vec_image)
 		{
@@ -275,6 +276,7 @@ public:
 				continue;
 			}
 			std::vector<Result> vec_result(0);
+			vec_result.reserve(remaining.size());
 			for (const auto& b : remaining)
 			{
 				Result res;
@@ -287,7 +289,8 @@ public:
 				res.rect = cv::Rect(x, y, w, h);
 				vec_result.push_back(res);
 			}
-			vec_batch_result[i] = vec_result;
+			//vec_batch_result[i] = vec_result;
+			vec_batch_result.push_back(vec_result);
 		}
 	}
 };

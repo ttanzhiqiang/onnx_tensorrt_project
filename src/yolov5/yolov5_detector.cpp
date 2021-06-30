@@ -3,6 +3,7 @@
 #include <opencv2/opencv.hpp>
 #include <common.h>
 #include "Trt.h"
+#include "class_timer.hpp"
 struct Result
 {
 	int		 id = -1;
@@ -399,7 +400,7 @@ public:
 		std::vector<BatchResult>& vec_batch_result)
 	{
 		vec_batch_result.clear();
-		vec_batch_result.resize(vec_image.size());
+		vec_batch_result.reserve(vec_image.size());
 		std::vector<float>data;
 		for (const auto& img : vec_image)
 		{
@@ -442,7 +443,8 @@ public:
 				res.rect = cv::Rect(x, y, w, h);
 				vec_result.push_back(res);
 			}
-			vec_batch_result[i] = vec_result;
+			//vec_batch_result[i] = vec_result;
+			vec_batch_result.push_back(vec_result);
 		}
 	}
 };
@@ -451,11 +453,11 @@ int main()
 {
 	Yolov5Dectector m_Yolov5Dectector;
 	Config m_config;
-	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\yolov5\\yolov5-v5_weight\\yolov5x.onnx";
-	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\yolov5\\yolov5-v5_weight\\yolov5x_fp32_batch_1.engine";
+	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_yolov5\\yolov5l.sim.onnx";
+	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_yolov5\\yolov5l_sim_fp16_batch_1.engine";
 	//m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\image\\";
 	m_config.maxBatchSize = 1;
-	m_config.mode = 0;
+	m_config.mode = 1;
 	m_Yolov5Dectector.init(m_config);
 	std::vector<BatchResult> batch_res;
 	std::vector<cv::Mat> batch_img;
@@ -466,7 +468,28 @@ int main()
 	//test1
 	batch_img.push_back(image);
 	//batch_img.push_back(image_1);
-	m_Yolov5Dectector.detect(batch_img, batch_res);
+
+	float all_time = 0.0;
+	time_t start = time(0);
+	Timer timer;
+	int m = 100;
+	for (int i = 0; i < m; i++)
+	{
+		//timer.reset();
+		clock_t start, end;
+		timer.reset();
+		m_Yolov5Dectector.detect(batch_img, batch_res);
+		//double t = timer.elapsed();
+		double t = timer.elapsed();
+		std::cout << i << ":" << t << "ms" << std::endl;
+		if (i > 0)
+		{
+			all_time += t;
+		}
+	}
+	std::cout << m << "´Î time:" << all_time << " ms" << std::endl;
+	std::cout << "1´Î time:" << all_time / m << " ms" << std::endl;
+	std::cout << "FPS::" << 1000 / (all_time / m) << std::endl;
 	//disp
 	for (int i = 0; i < batch_img.size(); ++i)
 	{
