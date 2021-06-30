@@ -356,13 +356,13 @@ public:
 		}
 	}
 
-	void isInt8(std::string calibration_image_list_file)
+	void isInt8(std::string calibration_image_list_file, int width, int height)
 	{
 		size_t npos = _config.onnxModelpath.find_first_of('.');
 		std::string calib_table_name = _config.onnxModelpath.substr(0, npos) + ".table";
 		if (!fileExists(calib_table_name))
 		{
-			onnx_net->SetInt8Calibrator("Int8MinMaxCalibrator", m_InputW, m_InputH, calibration_image_list_file.c_str(), calib_table_name.c_str());
+			onnx_net->SetInt8Calibrator("Int8MinMaxCalibrator", width, height, calibration_image_list_file.c_str(), calib_table_name.c_str());
 		}
 	}
 
@@ -373,7 +373,7 @@ public:
 		onnx_net->SetMaxBatchSize(config.maxBatchSize);
 		if (config.mode == 2)
 		{
-			isInt8(config.calibration_image_list_file);
+			isInt8(config.calibration_image_list_file, config.calibration_width, config.calibration_height);
 		}
 		m_BatchSize = config.maxBatchSize;
 		onnx_net->CreateEngine(config.onnxModelpath, config.engineFile, config.customOutput, config.maxBatchSize, config.mode);
@@ -453,11 +453,13 @@ int main()
 {
 	Yolov5Dectector m_Yolov5Dectector;
 	Config m_config;
-	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_yolov5\\yolov5l.sim.onnx";
-	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_yolov5\\yolov5l_sim_fp16_batch_1.engine";
-	//m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\image\\";
+	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_yolov5\\yolov5x.sim.onnx";
+	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_yolov5\\yolov5x_sim_int8_batch_1.engine";
+	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\image\\";
 	m_config.maxBatchSize = 1;
-	m_config.mode = 1;
+	m_config.mode = 2;
+	m_config.calibration_width = 640;
+	m_config.calibration_height = 640;
 	m_Yolov5Dectector.init(m_config);
 	std::vector<BatchResult> batch_res;
 	std::vector<cv::Mat> batch_img;

@@ -72,10 +72,10 @@ you have the trained model file from the darknet/libtorch/pytorch
 |  yolov4   | 416x416 | 1660TI | 23.25ms | 17.24ms | 13.70ms |
 |  yolov4   | 512x512 | 1660TI | 29.41ms | 24.39ms | 21.27ms |
 |  yolov4   | 608x608 | 1660TI | 43.48ms | 34.48ms | 26.32ms |
-| yolov5 5s | 608x608 | 2080ti | 24.47ms | 22.46ms |    /    |
-| yolov5 5m | 608x608 | 2080ti | 30.61ms | 24.02ms |    /    |
-| yolov5 5l | 608x608 | 2080ti | 32.58ms | 25.84ms |    /    |
-| yolov5 5x | 608x608 | 2080ti | 40.69ms | 29.81ms |    /    |
+| yolov5 5s | 640x640 | 2080ti | 24.47ms | 22.46ms | 22.38ms |
+| yolov5 5m | 640x640 | 2080ti | 30.61ms | 24.02ms | 23.73ms |
+| yolov5 5l | 640x640 | 2080ti | 32.58ms | 25.84ms | 24.44ms |
+| yolov5 5x | 640x640 | 2080ti | 40.69ms | 29.81ms | 27.19ms |
 | darknet53 | 224*224 | 2080ti | 3.53ms  | 1.84ms  | 1.71ms  |
 | darknet53 | 224*224 |  3070  | 4.29ms  | 2.16ms  | 1.75ms  |
 
