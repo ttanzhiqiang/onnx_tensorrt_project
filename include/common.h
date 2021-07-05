@@ -2,6 +2,7 @@
 #ifndef ENTROPY_COMMON
 #define ENTROPY_COMMON
 #include <experimental/filesystem>
+#include <map>
 #ifndef CUDA_CHECK
 #define CUDA_CHECK(callstr)                                                                    \
     {                                                                                          \
@@ -52,6 +53,14 @@ namespace Tn
     }
 }
 
+typedef struct
+{
+    int r;              //red channel: [0,255]
+    int g;             // green channel:[0, 255]	
+    int b;                // blue channel:[0, 255]
+}ColorPoint, * PColorPoint;
+typedef std::map<std::string, ColorPoint> LabelNameColorMap;
+
 #include <iostream>
 #include <vector>
 struct Config
@@ -74,7 +83,9 @@ struct Config
 
     int mode; //0£¬1£¬2
 
+    float conf_thresh = 0.6;
     //std::string calibration_image_list_file_txt = "configs/calibration_images.txt";
+    LabelNameColorMap ncp;
 };
 
 struct TensorInfo

@@ -21,6 +21,10 @@ centernet
 
 
 
+Unet
+
+<img src="./model/result/unet.jpg" style="zoom:70%;" />              <img src="./model/result/unet_result.png" style="zoom:70%;" />
+
 ## INTRODUCTION
 
 you have the trained model file from the darknet/libtorch/pytorch
@@ -78,6 +82,7 @@ you have the trained model file from the darknet/libtorch/pytorch
 | yolov5 5x | 640x640 | 2080ti | 40.69ms | 29.81ms | 27.19ms |
 | darknet53 | 224*224 | 2080ti | 3.53ms  | 1.84ms  | 1.71ms  |
 | darknet53 | 224*224 |  3070  | 4.29ms  | 2.16ms  | 1.75ms  |
+|   unet    | 512*512 | 2080ti | 20.91ms | 17.01ms | 16.05ms |
 
 
 
