@@ -25,6 +25,14 @@ Unet
 
 <img src="./model/result/unet.jpg" style="zoom:70%;" />              <img src="./model/result/unet_result.png" style="zoom:70%;" />
 
+
+
+CenterFace
+
+<img src="./model/result/centerface_result.png" style="zoom:70%;" />              
+
+
+
 ## INTRODUCTION
 
 you have the trained model file from the darknet/libtorch/pytorch
@@ -89,9 +97,11 @@ you have the trained model file from the darknet/libtorch/pytorch
 
 #### x64(inference / detect time)
 
-|   model   |  size   |  gpu   | fp32(inference/detect) | fp16(inference/detect) | INT8(inference/detect) |
-| :-------: | :-----: | :----: | :--------------------: | :--------------------: | :--------------------: |
-| centernet | 512x512 | 2080ti |     17.8ms/39.7ms      |     15.7ms/36.49ms     |    14.37ms/36.34ms     |
+|        model        |  size   |  gpu   | fp32(inference/detect) | fp16(inference/detect) | INT8(inference/detect) |
+| :-----------------: | :-----: | :----: | :--------------------: | :--------------------: | :--------------------: |
+|      centernet      | 512x512 | 2080ti |     17.8ms/39.7ms      |     15.7ms/36.49ms     |    14.37ms/36.34ms     |
+|     centerface      | 640x640 | 2080ti |     5.56ms/11.79ms     |     4.23ms/10.89ms     |           /            |
+| centerface_bnmerged | 640x640 | 2080ti |     5.67ms/11.82ms     |     4.22ms/10.46ms     |           /            |
 
 </details>
 

@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\calibrator.cpp" />
+    <ClCompile Include="..\src\CenterFace\CenterFace_detector.cpp" />
     <ClCompile Include="..\src\centernet\centernet_detection.cpp" />
     <ClCompile Include="..\src\classify\classify.cpp" />
     <ClCompile Include="..\src\common.cpp" />
