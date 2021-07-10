@@ -4,7 +4,7 @@
 
 
 
-Yolov4/Yolov3
+Yolov4/Yolov3/Yolov5
 
 - ![](./model/result/yolo_result.png)
 -  
