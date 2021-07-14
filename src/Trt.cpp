@@ -161,6 +161,11 @@ void Trt::CopyFromHostToDevice(const std::vector<float>& input, int bindIndex, c
     CUDA_CHECK(cudaMemcpyAsync(mBinding[bindIndex], input.data(), mBindingSize[bindIndex], cudaMemcpyHostToDevice, stream));
 }
 
+void Trt::CopyFromHostToDevice(const float* input, int bindIndex, const cudaStream_t& stream) {
+    //assert(input.size() * sizeof(float) <= mBindingSize[bindIndex]);
+    CUDA_CHECK(cudaMemcpyAsync(mBinding[bindIndex], input, mBindingSize[bindIndex], cudaMemcpyHostToDevice, stream));
+}
+
 void Trt::CopyFromDeviceToHost(std::vector<float>& output, int bindIndex) {
     output.resize(mBindingSize[bindIndex]/sizeof(float));
     CUDA_CHECK(cudaMemcpy(output.data(), mBinding[bindIndex], mBindingSize[bindIndex], cudaMemcpyDeviceToHost));

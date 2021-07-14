@@ -340,10 +340,10 @@ int main_CenterNetDynDectector()
 	std::vector<cv::Mat> batch_img;
 	std::string filename = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_centernet\\image\\17790319373_bd19b24cfc_k.jpg";
 	cv::Mat image = cv::imread(filename);
-	//std::string filename_1 = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_centernet\\image\\dog.jpg";
-	//cv::Mat image_1 = cv::imread(filename_1);
-	batch_img.push_back(image);
-	//batch_img.push_back(image_1);
+	std::string filename_1 = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_centernet\\image\\dog.jpg";
+	cv::Mat image_1 = cv::imread(filename_1);
+	//batch_img.push_back(image);
+	batch_img.push_back(image_1);
 	m_CenterNetDynDectector.detect_dyn(batch_img, batch_res);
 	//disp
 	for (int i = 0; i < batch_img.size(); ++i)
@@ -357,6 +357,7 @@ int main_CenterNetDynDectector()
 			cv::putText(batch_img[i], stream.str(), cv::Point(r.rect.x, r.rect.y - 5), 0, 0.5, cv::Scalar(0, 0, 255), 2);
 		}
 		cv::imshow("image" + std::to_string(i), batch_img[i]);
+		cv::imwrite("result" + std::to_string(i)+".png", batch_img[i]);
 	}
 	cv::waitKey(10);
 	return 0;

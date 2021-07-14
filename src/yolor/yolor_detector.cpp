@@ -3,14 +3,15 @@
 #include <opencv2/opencv.hpp>
 #include <common.h>
 #include "Trt.h"
-struct Result
+#include "class_timer.hpp"
+struct YolorResult
 {
 	int		 id = -1;
 	float	 prob = 0.f;
 	cv::Rect rect;
 };
-typedef std::vector<Result> BatchResult;
-class YoloDynamicDectector
+typedef std::vector<YolorResult> BatchResult;
+class YolorDectector
 {
 public:
 	std::shared_ptr<Trt> onnx_net;
@@ -18,27 +19,25 @@ public:
 	uint32_t m_InputW;
 	uint32_t m_InputC;
 	uint32_t m_InputSize;
+	int m_Classes;
 	uint32_t m_BatchSize = 1;
 	float m_NMSThresh = 0.2;
 	int _n_yolo_ind = 0;
-	std::vector<std::string> m_ClassNames;
 	std::vector<TensorInfo> m_OutputTensors;
 	std::vector<std::map<std::string, std::string>> m_configBlocks;
 	cudaStream_t mCudaStream;
 	Config _config;
-
-	uint32_t m_Ori_InputH;
-	uint32_t m_Ori_InputW;
+	std::vector<float> vec_anchors = { 12, 16, 19, 36, 40, 28, 36, 75, 76, 55, 72, 146, 142, 110, 192, 243, 459, 401 };
+	std::vector<float> vec_stride = { 8,16,32 };
 public:
-	YoloDynamicDectector::YoloDynamicDectector()
+	YolorDectector::YolorDectector()
 	{
 
 	}
-	YoloDynamicDectector::~YoloDynamicDectector()
+	YolorDectector::~YolorDectector()
 	{
 		//释放内存
-		m_ClassNames.clear();
-		for (int i = 0; i < m_OutputTensors.size();i++)
+		for (int i = 0; i < m_OutputTensors.size(); i++)
 		{
 			m_OutputTensors[i].hostBuffer.clear();
 		}
@@ -107,84 +106,73 @@ public:
 		binfo.push_back(bbi);
 	};
 
+	void calcuate_letterbox_message(const int m_InputH, const int m_InputW,
+		const int imageH, const int imageW,
+		float& sh, float& sw,
+		int& xOffset, int& yOffset)
+	{
+		float dim = std::max(imageW, imageH);
+		int resizeH = ((imageH / dim) * m_InputH);
+		int resizeW = ((imageW / dim) * m_InputW);
+		sh = static_cast<float>(resizeH) / static_cast<float>(imageH);
+		sw = static_cast<float>(resizeW) / static_cast<float>(imageW);
+		if ((m_InputW - resizeW) % 2) resizeW--;
+		if ((m_InputH - resizeH) % 2) resizeH--;
+		assert((m_InputW - resizeW) % 2 == 0);
+		assert((m_InputH - resizeH) % 2 == 0);
+		xOffset = (m_InputW - resizeW) / 2;
+		yOffset = (m_InputH - resizeH) / 2;
+	}
+
 	std::vector<BBoxInfo> decodeTensor(const int imageIdx,
 		const int imageH,
 		const int imageW,
-		const TensorInfo& tensor)
+		const int m_tensor_i)
 	{
-		float	scale_h = 1.f;
-		float	scale_w = 1.f;
-		int	xOffset = 0;
-		int yOffset = 0;
-
-		const float* detections = &tensor.hostBuffer[imageIdx * tensor.volume];
-
+		auto tensor = m_OutputTensors[m_tensor_i];
+		float* detections = tensor.hostBuffer.data() + imageIdx * tensor.volume;
 		std::vector<BBoxInfo> binfo;
-		for (uint32_t y = 0; y < tensor.grid_h; ++y)
+		int position = 0;
+		for (int i = 0; i < tensor.hostBuffer.size() / (m_Classes + 5); i++)
 		{
-			for (uint32_t x = 0; x < tensor.grid_w; ++x)
-			{
-				for (uint32_t b = 0; b < tensor.numBBoxes; ++b)
-				{
-					const float pw = tensor.anchors[tensor.masks[b] * 2];
-					const float ph = tensor.anchors[tensor.masks[b] * 2 + 1];
-
-					const int numGridCells = tensor.grid_h * tensor.grid_w;
-					const int bbindex = y * tensor.grid_w + x;
-					const float bx
-						= x + detections[bbindex + numGridCells * (b * (5 + tensor.numClasses) + 0)];
-
-					const float by
-						= y + detections[bbindex + numGridCells * (b * (5 + tensor.numClasses) + 1)];
-					const float bw
-						= pw * detections[bbindex + numGridCells * (b * (5 + tensor.numClasses) + 2)];
-					const float bh
-						= ph * detections[bbindex + numGridCells * (b * (5 + tensor.numClasses) + 3)];
-
-					const float objectness
-						= detections[bbindex + numGridCells * (b * (5 + tensor.numClasses) + 4)];
-
-					float maxProb = 0.0f;
-					int maxIndex = -1;
-
-					for (uint32_t i = 0; i < tensor.numClasses; ++i)
-					{
-						float prob
-							= (detections[bbindex
-								+ numGridCells * (b * (5 + tensor.numClasses) + (5 + i))]);
-
-						if (prob > maxProb)
-						{
-							maxProb = prob;
-							maxIndex = i;
-						}
-					}
-					maxProb = objectness * maxProb;
-
-					if (maxProb > 0.2)//m_ProbThresh
-					{
-						add_bbox_proposal(bx, by, bw, bh, tensor.stride_h, tensor.stride_w, scale_h, scale_w, xOffset, yOffset, maxIndex, maxProb, imageW, imageH, binfo);
-					}
-				}
-			}
+			float* row = detections + position * (m_Classes + 5);
+			position++;
+			BBoxInfo box;
+			auto max_pos = std::max_element(row + 5, row + m_Classes + 5);
+			box.prob = Logist(row[4]) * Logist(row[max_pos - row]);
+			if (box.prob < 0.5)
+				continue;
+			box.classId = max_pos - row - 5;
+			box.label = max_pos - row - 5;
+			int center_x = row[0];
+			int center_y = row[1];
+			int center_w = row[2];
+			int center_h = row[3];
+			box.box.x1 = double(center_x - center_w / 2) / m_InputW * imageW;
+			box.box.x2 = double(center_x + center_w / 2) / m_InputW * imageW;
+			box.box.y1 = double(center_y - center_h / 2) / m_InputH * imageH;
+			box.box.y2 = double(center_y + center_h / 2) / m_InputH * imageH;
+			binfo.push_back(box);
 		}
 		return binfo;
 	}
-
 	std::vector<BBoxInfo> decodeDetections(const int& imageIdx,
 		const int& imageH,
 		const int& imageW)
 	{
 		//	Timer timer;
 		std::vector<BBoxInfo> binfo;
-		for (auto& tensor : m_OutputTensors)
+		for (int m_tensor_i = 0; m_tensor_i < m_OutputTensors.size(); m_tensor_i++)
 		{
-			std::vector<BBoxInfo> curBInfo = decodeTensor(imageIdx, imageH, imageW, tensor);
+			std::vector<BBoxInfo> curBInfo = decodeTensor(imageIdx, imageH, imageW, m_tensor_i);
 			binfo.insert(binfo.end(), curBInfo.begin(), curBInfo.end());
 		}
 		//	timer.out("decodeDetections");
 		return binfo;
 	}
+
+
+	__device__ float Logist(float data) { return 1.0f / (1.0f + expf(-data)); };
 
 	std::vector<BBoxInfo> diou_nms(const float nmsThresh, std::vector<BBoxInfo> binfo)
 	{
@@ -308,6 +296,7 @@ public:
 
 		for (auto& boxes : splitBoxes)
 		{
+			std::string model_type = "yolov5";
 			if ("yolov5" == model_type)
 			{
 				boxes = diou_nms(nmsThresh, boxes);
@@ -324,171 +313,19 @@ public:
 
 	float getNMSThresh() const { return m_NMSThresh; }
 
-	uint32_t getNumClasses() const { return static_cast<uint32_t>(m_ClassNames.size()); }
-
-	static void leftTrim(std::string& s)
-	{
-		s.erase(s.begin(), find_if(s.begin(), s.end(), [](int ch) { return !isspace(ch); }));
-	}
-
-	static void rightTrim(std::string& s)
-	{
-		s.erase(find_if(s.rbegin(), s.rend(), [](int ch) { return !isspace(ch); }).base(), s.end());
-	}
-
-	std::string trim(std::string s)
-	{
-		leftTrim(s);
-		rightTrim(s);
-		return s;
-	}
-
-	std::vector<std::map<std::string, std::string>> parseConfigFile(const std::string cfgFilePath)
-	{
-		assert(fileExists(cfgFilePath));
-		std::ifstream file(cfgFilePath);
-		assert(file.good());
-		std::string line;
-		std::vector<std::map<std::string, std::string>> blocks;
-		std::map<std::string, std::string> block;
-
-		while (getline(file, line))
-		{
-			if (line.empty()) continue;
-			if (line.front() == '#') continue;
-			line = trim(line);
-			if (line.front() == '[')
-			{
-				if (!block.empty())
-				{
-					blocks.push_back(block);
-					block.clear();
-				}
-				std::string key = "type";
-				std::string value = trim(line.substr(1, line.size() - 2));
-				block.insert(std::pair<std::string, std::string>(key, value));
-			}
-			else
-			{
-				size_t cpos = line.find('=');
-				std::string key = trim(line.substr(0, cpos));
-				std::string value = trim(line.substr(cpos + 1));
-				block.insert(std::pair<std::string, std::string>(key, value));
-			}
-		}
-		blocks.push_back(block);
-		return blocks;
-	}
-
-	void parseConfigBlocks()
-	{
-		for (auto block : m_configBlocks)
-		{
-			if (block.at("type") == "net")
-			{
-				assert((block.find("height") != block.end())
-					&& "Missing 'height' param in network cfg");
-				assert((block.find("width") != block.end()) && "Missing 'width' param in network cfg");
-				assert((block.find("channels") != block.end())
-					&& "Missing 'channels' param in network cfg");
-
-				m_InputH = std::stoul(block.at("height"));
-				m_InputW = std::stoul(block.at("width"));
-				m_InputC = std::stoul(block.at("channels"));
-				m_InputSize = m_InputC * m_InputH * m_InputW;
-			}
-			else if ((block.at("type") == "region") || (block.at("type") == "yolo"))
-			{
-				assert((block.find("num") != block.end())
-					&& std::string("Missing 'num' param in " + block.at("type") + " layer").c_str());
-				assert((block.find("classes") != block.end())
-					&& std::string("Missing 'classes' param in " + block.at("type") + " layer")
-					.c_str());
-				assert((block.find("anchors") != block.end())
-					&& std::string("Missing 'anchors' param in " + block.at("type") + " layer")
-					.c_str());
-
-				TensorInfo outputTensor;
-				std::string anchorString = block.at("anchors");
-				while (!anchorString.empty())
-				{
-					size_t npos = anchorString.find_first_of(',');
-					if (npos != std::string::npos)
-					{
-						float anchor = std::stof(trim(anchorString.substr(0, npos)));
-						outputTensor.anchors.push_back(anchor);
-						anchorString.erase(0, npos + 1);
-					}
-					else
-					{
-						float anchor = std::stof(trim(anchorString));
-						outputTensor.anchors.push_back(anchor);
-						break;
-					}
-				}
-
-				assert((block.find("mask") != block.end())
-					&& std::string("Missing 'mask' param in " + block.at("type") + " layer")
-					.c_str());
-
-				std::string maskString = block.at("mask");
-				while (!maskString.empty())
-				{
-					size_t npos = maskString.find_first_of(',');
-					if (npos != std::string::npos)
-					{
-						uint32_t mask = std::stoul(trim(maskString.substr(0, npos)));
-						outputTensor.masks.push_back(mask);
-						maskString.erase(0, npos + 1);
-					}
-					else
-					{
-						uint32_t mask = std::stoul(trim(maskString));
-						outputTensor.masks.push_back(mask);
-						break;
-					}
-				}
-
-				outputTensor.numBBoxes = outputTensor.masks.size() > 0
-					? outputTensor.masks.size()
-					: std::stoul(trim(block.at("num")));
-				outputTensor.numClasses = std::stoul(block.at("classes"));
-				if (m_ClassNames.empty())
-				{
-					for (uint32_t i = 0; i < outputTensor.numClasses; ++i)
-					{
-						m_ClassNames.push_back(std::to_string(i));
-					}
-				}
-
-				//outputTensor.blobName = onnx_net->mBindingName[_n_yolo_ind + 1];
-				outputTensor.gridSize = (m_InputH / 32) * pow(2, _n_yolo_ind);
-				outputTensor.grid_h = (m_InputH / 32) * pow(2, _n_yolo_ind);
-				outputTensor.grid_w = (m_InputW / 32) * pow(2, _n_yolo_ind);
-				//if (m_NetworkType == "yolov4")//pan
-				//{
-				//	outputTensor.gridSize = (m_InputH / 32) * pow(2, 2 - _n_yolo_ind);
-				//	outputTensor.grid_h = (m_InputH / 32) * pow(2, 2 - _n_yolo_ind);
-				//	outputTensor.grid_w = (m_InputW / 32) * pow(2, 2 - _n_yolo_ind);
-				//}
-				outputTensor.stride = m_InputH / outputTensor.gridSize;
-				outputTensor.stride_h = m_InputH / outputTensor.grid_h;
-				outputTensor.stride_w = m_InputW / outputTensor.grid_w;
-				outputTensor.volume = outputTensor.grid_h * outputTensor.grid_w
-					* (outputTensor.numBBoxes * (5 + outputTensor.numClasses));
-				m_OutputTensors.push_back(outputTensor);
-				_n_yolo_ind++;
-			}
-		}
-	}
-
 	void UpdateOutputTensor()
 	{
-		int m_yolo_ind = 1;
-		for (auto& tensor : m_OutputTensors)
+		m_InputC = onnx_net->mBindingDims[0].d[1];
+		m_InputW = onnx_net->mBindingDims[0].d[2];
+		m_InputH = onnx_net->mBindingDims[0].d[3];
+		m_Classes = onnx_net->mBindingDims[1].d[2] - 5;
+		for (int m_yolo_ind = 1; m_yolo_ind < onnx_net->mBindingName.size(); m_yolo_ind++)
 		{
-			tensor.blobName = onnx_net->mBindingName[m_yolo_ind];
-			m_yolo_ind++;
+			TensorInfo outputTensor;
+			outputTensor.anchors = vec_anchors;
+			outputTensor.volume = onnx_net->mBindingSize[m_yolo_ind] / sizeof(float) / onnx_net->mBindingDims[m_yolo_ind].d[0];
+			outputTensor.blobName = onnx_net->mBindingName[m_yolo_ind];
+			m_OutputTensors.push_back(outputTensor);
 		}
 	}
 
@@ -502,13 +339,13 @@ public:
 		}
 	}
 
-	void isInt8(std::string calibration_image_list_file)
+	void isInt8(std::string calibration_image_list_file, int width, int height)
 	{
 		size_t npos = _config.onnxModelpath.find_first_of('.');
 		std::string calib_table_name = _config.onnxModelpath.substr(0, npos) + ".table";
 		if (!fileExists(calib_table_name))
 		{
-			onnx_net->SetInt8Calibrator("Int8MinMaxCalibrator", m_InputW, m_InputH, calibration_image_list_file.c_str(), calib_table_name.c_str());
+			onnx_net->SetInt8Calibrator("Int8MinMaxCalibrator", width, height, calibration_image_list_file.c_str(), calib_table_name.c_str());
 		}
 	}
 
@@ -516,56 +353,24 @@ public:
 	{
 		_config = config;
 		onnx_net = std::make_shared<Trt>();
-		//cfg初始化
-		m_configBlocks = parseConfigFile(config.cfgFile);
-		parseConfigBlocks();
 		onnx_net->SetMaxBatchSize(config.maxBatchSize);
 		if (config.mode == 2)
 		{
-			isInt8(config.calibration_image_list_file);
-		}
-		bool m_dyn_flag = true;
-		if (m_dyn_flag)
-		{
-			onnx_net->AddDynamicShapeProfile(1, "input", { 3,320,320 }, { 3,512,512 }, { 3,800,800 });
+			isInt8(config.calibration_image_list_file, config.calibration_width, config.calibration_height);
 		}
 		m_BatchSize = config.maxBatchSize;
 		onnx_net->CreateEngine(config.onnxModelpath, config.engineFile, config.customOutput, config.maxBatchSize, config.mode);
-		onnx_net->buildPreprocessorEngine();
 		//更新m_OutputTensors
 		UpdateOutputTensor();
 		allocateBuffers();
 		cudaStreamCreate(&mCudaStream);
 	}
 
-	void doInference_dyn(std::vector<float> input, const uint32_t batchSize)
+	void doInference(std::vector<float> input, const uint32_t batchSize)
 	{
-		nvinfer1::Dims inputdim = onnx_net->mEngine->getBindingDimensions(0); // C*H*W
-		void* hostBuffer;
-		cudaMalloc(&hostBuffer, input.size() * sizeof(float));
-		CUDA_CHECK(cudaMemcpy(hostBuffer, input.data(), input.size() * sizeof(float), cudaMemcpyHostToDevice));
-
-		// Set the input size for the preprocessor
-		nvinfer1::Dims inputDims_1;
-		inputDims_1.nbDims = 4;
-		inputDims_1.d[0] = batchSize;
-		inputDims_1.d[1] = m_InputC;
-		inputDims_1.d[2] = m_Ori_InputH;
-		inputDims_1.d[3] = m_Ori_InputW;
-		//CHECK_RETURN_W_MSG(onnx_net->mPreprocessorContext->setBindingDimensions(0, inputDims), false, "Invalid binding dimensions.");
-		onnx_net->mPreprocessorContext->setBindingDimensions(0, inputDims_1);
-		// We can only run inference once all dynamic input shapes have been specified.
-		if (!onnx_net->mPreprocessorContext->allInputDimensionsSpecified())
-		{
-			return;
-		}
-
-		std::vector<void*> preprocessorBindings = { hostBuffer, onnx_net->GetBindingPtr(0) };
-		bool status = onnx_net->mPreprocessorContext->executeV2(preprocessorBindings.data());
-		if (!status)
-		{
-			return;
-		}
+		//	Timer timer;
+		assert(batchSize <= m_BatchSize && "Image batch size exceeds TRT engines batch size");
+		onnx_net->CopyFromHostToDevice(input, 0, mCudaStream);
 		onnx_net->ForwardAsync(mCudaStream);
 		for (auto& tensor : m_OutputTensors)
 		{
@@ -574,45 +379,44 @@ public:
 		cudaStreamSynchronize(mCudaStream);
 	}
 
-	void detect_dyn(const std::vector<cv::Mat>& vec_image,
+	void detect(const std::vector<cv::Mat>& vec_image,
 		std::vector<BatchResult>& vec_batch_result)
 	{
-		m_Ori_InputW = vec_image[0].cols;
-		m_Ori_InputH = vec_image[0].rows;
-		m_InputC = vec_image[0].channels();
 		vec_batch_result.clear();
-		vec_batch_result.resize(vec_image.size());
+		vec_batch_result.reserve(vec_image.size());
 		std::vector<float>data;
 		for (const auto& img : vec_image)
 		{
-			cv::Mat imgf;
-			img.convertTo(imgf, CV_32FC3, 1 / 255.0);
+			cv::Mat resized, imgf;
+			cv::resize(img, resized, cv::Size(m_InputH, m_InputW));
+			resized.convertTo(imgf, CV_32FC3, 1 / 255.0);
 			std::vector<cv::Mat>channles(3);
 			cv::split(imgf, channles);
 			float* ptr1 = (float*)(channles[0].data);
 			float* ptr2 = (float*)(channles[1].data);
 			float* ptr3 = (float*)(channles[2].data);
-			data.insert(data.end(), ptr1, ptr1 + img.rows * img.cols);
-			data.insert(data.end(), ptr2, ptr2 + img.rows * img.cols);
-			data.insert(data.end(), ptr3, ptr3 + img.rows * img.cols);
+			data.insert(data.end(), ptr1, ptr1 + m_InputH * m_InputW);
+			data.insert(data.end(), ptr2, ptr2 + m_InputH * m_InputW);
+			data.insert(data.end(), ptr3, ptr3 + m_InputH * m_InputW);
 		}
-		doInference_dyn(data, vec_image.size());
+
+		doInference(data, vec_image.size());
 		for (uint32_t i = 0; i < vec_image.size(); ++i)
 		{
 			auto curImage = vec_image.at(i);
 			auto binfo = decodeDetections(i, curImage.rows, curImage.cols);
 			auto remaining = nmsAllClasses(getNMSThresh(),
 				binfo,
-				getNumClasses(),
+				m_Classes,
 				"");
 			if (remaining.empty())
 			{
 				continue;
 			}
-			std::vector<Result> vec_result(0);
+			std::vector<YolorResult> vec_result;
 			for (const auto& b : remaining)
 			{
-				Result res;
+				YolorResult res;
 				res.id = b.label;
 				res.prob = b.prob;
 				const int x = b.box.x1;
@@ -622,22 +426,23 @@ public:
 				res.rect = cv::Rect(x, y, w, h);
 				vec_result.push_back(res);
 			}
-			vec_batch_result[i] = vec_result;
+			vec_batch_result.push_back(vec_result);
 		}
 	}
 };
 
-int main_YoloDynamicDectector()
+int main()
 {
-	YoloDynamicDectector m_YoloDynamicDectector;
+	YolorDectector m_YolorDectector;
 	Config m_config;
-	m_config.cfgFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\yolov3.cfg";
-	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\yolov3.onnx";
-	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\yolov3_dyn_fp32_batch_1.engine";
+	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\yolor\\yolor_csp.onnx";
+	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\yolor\\yolor_csp_int8_batch_1.engine";
 	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\image\\";
 	m_config.maxBatchSize = 1;
-	m_config.mode = 0;
-	m_YoloDynamicDectector.init(m_config);
+	m_config.mode = 2;
+	m_config.calibration_width = 512;
+	m_config.calibration_height = 512;
+	m_YolorDectector.init(m_config);
 	std::vector<BatchResult> batch_res;
 	std::vector<cv::Mat> batch_img;
 	std::string filename = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\image\\dog.jpg";
@@ -645,9 +450,30 @@ int main_YoloDynamicDectector()
 	std::string filename_1 = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\image\\person.jpg";
 	cv::Mat image_1 = cv::imread(filename_1);
 	//test1
-	batch_img.push_back(image);
-	//batch_img.push_back(image_1);
-	m_YoloDynamicDectector.detect_dyn(batch_img, batch_res);
+	//batch_img.push_back(image);
+	batch_img.push_back(image_1);
+
+	float all_time = 0.0;
+	time_t start = time(0);
+	Timer timer;
+	int m = 100;
+	for (int i = 0; i < m; i++)
+	{
+		//timer.reset();
+		clock_t start, end;
+		timer.reset();
+		m_YolorDectector.detect(batch_img, batch_res);
+		//double t = timer.elapsed();
+		double t = timer.elapsed();
+		std::cout << i << ":" << t << "ms" << std::endl;
+		if (i > 0)
+		{
+			all_time += t;
+		}
+	}
+	std::cout << m << "次 time:" << all_time << " ms" << std::endl;
+	std::cout << "1次 time:" << all_time / m << " ms" << std::endl;
+	std::cout << "FPS::" << 1000 / (all_time / m) << std::endl;
 	//disp
 	for (int i = 0; i < batch_img.size(); ++i)
 	{
@@ -660,7 +486,6 @@ int main_YoloDynamicDectector()
 			cv::putText(batch_img[i], stream.str(), cv::Point(r.rect.x, r.rect.y - 5), 0, 0.5, cv::Scalar(0, 0, 255), 2);
 		}
 		cv::imshow("image" + std::to_string(i), batch_img[i]);
-		cv::imwrite("yolo_result" + std::to_string(i)+".png", batch_img[i]);
 	}
 	cv::waitKey(10);
 	return 0;

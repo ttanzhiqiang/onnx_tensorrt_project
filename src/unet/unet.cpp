@@ -36,7 +36,7 @@ public:
 
 	UnetParser::~UnetParser()
 	{
-		//é‡Šæ”¾å†…å­˜
+		//ÊÍ·ÅÄÚ´æ
 		m_ClassNames.clear();
 		for (int i = 0; i < m_OutputTensors.size(); i++)
 		{
@@ -103,9 +103,9 @@ public:
 	}
 
 	void UnetParser::process_cls_result(Detection& res, float* output, int output_size) {
-		//æ”¯æŒå¤šç±»è¯­ä¹‰åˆ†å‰²ï¼ˆè¿”å›žæ ‡ç­¾å›¾ï¼‰:å­˜åœ¨é”¯é½¿
+		//Ö§³Ö¶àÀàÓïÒå·Ö¸î£¨·µ»Ø±êÇ©Í¼£©:´æÔÚ¾â³Ý
 		int m_classes = output_size / (m_InputW * m_InputH);
-		res.mask.resize(m_InputW * m_InputH * 1);   //è¿”å›žæ ‡ç­¾å›¾
+		res.mask.resize(m_InputW * m_InputH * 1);   //·µ»Ø±êÇ©Í¼
 		for (int i = 0; i < m_InputW * m_InputH; ++i)
 		{
 			float max_pixel_value = -9999999999;
@@ -144,7 +144,7 @@ public:
 		this->ncp = config.ncp;
 		this->CONF_THRESH = config.conf_thresh;
 		onnx_net->CreateEngine(config.onnxModelpath, config.engineFile, config.customOutput, config.maxBatchSize, config.mode);
-		//æ›´æ–°m_OutputTensors
+		//¸üÐÂm_OutputTensors
 		UpdateOutputTensor();
 		allocateBuffers();
 		cudaStreamCreate(&mCudaStream);
@@ -183,9 +183,9 @@ public:
 			//
 			for (auto& tensor : m_OutputTensors)
 			{
-				//é€šè¿‡è®¾å®šé˜ˆå€¼è¿›è¡Œç»“æžœè¾“å‡º
+				//Í¨¹ýÉè¶¨ãÐÖµ½øÐÐ½á¹ûÊä³ö
 				int m_classes = tensor.hostBuffer.size() / (m_InputW * m_InputH);
-				m_Detection.mask.resize(m_InputW * m_InputH * 1);   //è¿”å›žç±»æ ‡ç­¾å›¾
+				m_Detection.mask.resize(m_InputW * m_InputH * 1);   //·µ»ØÀà±êÇ©Í¼
 				for (int i = 0; i < m_InputW * m_InputH; i++)
 				{
 					float max_pixel_value = -9999999999;
@@ -227,14 +227,14 @@ public:
 	}
 };
 
-int main()
+int main_unet()
 {
 
 	UnetParser m_Unet;
 	Config m_config;
-	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_unet\\unet_three.onnx";
-	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_unet\\unet_three_int8_batch_1.engine";
-	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_unet\\images\\";
+	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\unet\\unet_three.onnx";
+	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\unet\\unet_three_int8_batch_1.engine";
+	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\unet\\images\\";
 	m_config.calibration_width = 512;
 	m_config.calibration_height = 512;
 	m_config.maxBatchSize = 1;
@@ -286,8 +286,8 @@ int main()
 			all_time += t;
 		}
 	}
-	std::cout << m << "æ¬¡ time:" << all_time << " ms" << std::endl;
-	std::cout << "1æ¬¡ time:" << all_time / m << " ms" << std::endl;
+	std::cout << m << "´Î time:" << all_time << " ms" << std::endl;
+	std::cout << "1´Î time:" << all_time / m << " ms" << std::endl;
 	std::cout << "FPS::" << 1000 / (all_time / m) << std::endl;
 
 	cv::Mat result;;

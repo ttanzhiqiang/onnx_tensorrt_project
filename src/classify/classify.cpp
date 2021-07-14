@@ -3,6 +3,7 @@
 #include <opencv2/opencv.hpp>
 #include <common.h>
 #include "Trt.h"
+#include "class_timer.hpp"
 
 struct Result
 {
@@ -166,23 +167,44 @@ public:
 };
 
 int main_classify()
+//int main()
 {
 	Classify m_Classify;
 	Config m_config;
 	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_classify\\resnet18-v2-7.onnx";
-	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_classify\\resnet18-v2-7_fp32_batch_1.engine";
+	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_classify\\resnet18-v2-7_int8_batch_1.engine";
 	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_classify\\images\\";
 	m_config.calibration_width = 224;
 	m_config.calibration_height = 224;
 	m_config.maxBatchSize = 1;
-	m_config.mode = 0;
+	m_config.mode = 1;
 	m_Classify.init(m_config);
 	std::vector<BatchResult> batch_res;
 	std::vector<cv::Mat> batch_img;
-	std::string filename = "F:\\imagenet\\ILSVRC2012_val_00000018.JPEG";
+	std::string filename = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_classify\\images\\ILSVRC2012_val_00000018.JPEG";
 	cv::Mat image = cv::imread(filename);
 	batch_img.push_back(image);
-	m_Classify.detect(batch_img, batch_res);
+
+	float all_time = 0.0;
+	time_t start = time(0);
+	Timer timer;
+	int m = 100;
+	for (int i = 0; i < m; i++)
+	{
+		clock_t start, end;
+		timer.reset();
+		m_Classify.detect(batch_img, batch_res);
+		double t = timer.elapsed();
+		std::cout << i << ":" << t << "ms" << std::endl;
+		if (i > 0)
+		{
+			all_time += t;
+		}
+	}
+	std::cout << m << "´Î time:" << all_time << " ms" << std::endl;
+	std::cout << "1´Î time:" << all_time / m << " ms" << std::endl;
+	std::cout << "FPS::" << 1000 / (all_time / m) << std::endl;
+
 	int a = 0;
 	return 0;
 }

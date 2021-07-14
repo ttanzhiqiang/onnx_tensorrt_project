@@ -142,10 +142,10 @@ public:
 			{
 				for (int w = 0; w < tensor.grid_w; w++)
 				{
-					float* row = detections + position * (80 + 5);
+					float* row = detections + position * (m_Classes + 5);
 					position++;
 					BBoxInfo box;
-					auto max_pos = std::max_element(row + 5, row + 80 + 5);
+					auto max_pos = std::max_element(row + 5, row + m_Classes + 5);
 					box.prob = Logist(row[4]) * Logist(row[max_pos - row]);
 					if (box.prob < 0.5)
 						continue;

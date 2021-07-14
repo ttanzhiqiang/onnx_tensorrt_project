@@ -73,6 +73,8 @@ public:
 
     void CopyFromHostToDevice(const std::vector<float>& input, int bindIndex,const cudaStream_t& stream);
 
+    void CopyFromHostToDevice(const float* input, int bindIndex, const cudaStream_t& stream);
+
     void CopyFromDeviceToHost(std::vector<float>& output, int bindIndex,const cudaStream_t& stream);
 
     void SetDevice(int device);

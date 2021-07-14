@@ -279,7 +279,7 @@ public:
 	}
 };
 
-int main()
+int main_CenterFace()
 {
 	CenterFaceDectector m_CenterFaceDectector;
 	Config m_config;

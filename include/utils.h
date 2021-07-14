@@ -102,7 +102,7 @@ struct alignas(float) Detection{
     float prob;
 };
 
-static inline cv::Mat preprocess_img(cv::Mat& img, int input_w, int input_h) {
+static inline cv::Mat preprocess_img(cv::Mat img, int input_w, int input_h) {
     int w, h, x, y;
     float r_w = input_w / (img.cols * 1.0);
     float r_h = input_h / (img.rows * 1.0);

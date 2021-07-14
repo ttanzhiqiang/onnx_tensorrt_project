@@ -295,15 +295,15 @@ public:
 	}
 };
 
-int main()
+int main_CenterNet()
 {
 	CenterNetDectector m_CenterNetDectector;
 	Config m_config;
 	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_centernet\\ctdet_coco_dla_2x.onnx";
-	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_centernet\\ctdet_coco_dla_2x_int8_batch_1.engine";
+	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_centernet\\ctdet_coco_dla_2x_fp32_batch_1.engine";
 	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_centernet\\image\\";
 	m_config.maxBatchSize = 1;
-	m_config.mode = 2;
+	m_config.mode = 1;
 	m_config.calibration_width = 512;
 	m_config.calibration_height = 512;
 	m_CenterNetDectector.init(m_config);

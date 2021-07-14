@@ -1,10 +1,10 @@
 # ONNX-TensorRT
 
-# Yolov5(4.0)/Yolov5(5.0)/Yolov4/Yolov3/CenterNet/CenterFace/Classify/Unet Implementation
+# Yolov5(4.0)/Yolov5(5.0)/YoloR/Yolov4/Yolov3/CenterNet/CenterFace/Classify/Unet Implementation
 
 
 
-Yolov4/Yolov3/Yolov5
+Yolov4/Yolov3/Yolov5/yolor
 
 - ![](./model/result/yolo_result.png)
 -  
@@ -43,7 +43,10 @@ you have the trained model file from the darknet/libtorch/pytorch
 - [x] yolov5-5.0(5s/5m/5s/5x)
 - [x] yolov4 , yolov4-tiny
 - [x] yolov3 , yolov3-tiny
+- [x] yolor
 - [x] centernet
+- [x] Unet
+- [x] CenterFace
 - [x] classify(mnist\alexnet\resnet18\resnet34\resnet50\shufflenet_v2\mobilenet_v2)
 
 ## Features
@@ -88,6 +91,8 @@ you have the trained model file from the darknet/libtorch/pytorch
 |   yolov5 5m   | 640x640 | 2080ti | 30.61ms | 24.02ms | 23.73ms |
 |   yolov5 5l   | 640x640 | 2080ti | 32.58ms | 25.84ms | 24.44ms |
 |   yolov5 5x   | 640x640 | 2080ti | 40.69ms | 29.81ms | 27.19ms |
+|  yolor_csp_x  | 512x512 | 2080ti | 27.89ms | 20.54ms | 18.71ms |
+|   yolor_csp   | 512x512 | 2080ti | 21.30ms | 18.06ms | 17.03ms |
 |   darknet53   | 224*224 | 2080ti | 3.53ms  | 1.84ms  | 1.71ms  |
 |   darknet53   | 224*224 |  3070  | 4.29ms  | 2.16ms  | 1.75ms  |
 | resnet18-v2-7 | 224*224 | 2080ti | 1.89ms  | 1.29ms  | 1.18ms  |
