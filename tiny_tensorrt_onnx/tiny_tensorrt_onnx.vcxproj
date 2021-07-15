@@ -19,6 +19,7 @@
     <ClInclude Include="..\src\centernet\ctdetLayer.h" />
     <ClInclude Include="..\src\centernet\dcn_v2.hpp" />
     <ClInclude Include="..\src\centernet\dcn_v2_im2col_cuda.h" />
+    <ClInclude Include="..\src\class_timer.hpp" />
     <ClInclude Include="..\src\yolov5\SiLUPlugin.h" />
     <ClInclude Include="..\src\yolo\yoloPlugin.h" />
   </ItemGroup>
@@ -28,8 +29,10 @@
     <ClCompile Include="..\src\centernet\centernet_detection.cpp" />
     <ClCompile Include="..\src\classify\classify.cpp" />
     <ClCompile Include="..\src\common.cpp" />
+    <ClCompile Include="..\src\retinaface\retinaface_detector.cpp" />
     <ClCompile Include="..\src\Trt.cpp" />
     <ClCompile Include="..\src\unet\unet.cpp" />
+    <ClCompile Include="..\src\yolor\yolor_detector.cpp" />
     <ClCompile Include="..\src\yolov5\SiLUPlugin.cpp" />
     <ClCompile Include="..\src\yolov5\yolov5_detector.cpp" />
     <ClCompile Include="..\src\yolo\yolo_detector.cpp" />

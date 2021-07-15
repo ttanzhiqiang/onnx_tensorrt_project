@@ -23,7 +23,13 @@
       <UniqueIdentifier>{53a20678-8657-4e0e-abbf-6d888ad24ca9}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\CenterFace">
-      <UniqueIdentifier>{f851459b-9235-4ee9-8c80-2b9930f2bfb8}</UniqueIdentifier>
+      <UniqueIdentifier>{96d7e1c6-b7a8-4800-9140-cb1d6e46d423}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\yolor">
+      <UniqueIdentifier>{ea4ed940-8c63-4668-a4c9-37ae4d101b32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\retinaface">
+      <UniqueIdentifier>{b3af7127-866e-4139-ae89-8197d9bf8181}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +63,9 @@
     <ClInclude Include="..\src\yolov5\SiLUPlugin.h">
       <Filter>src\yolov5</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\class_timer.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Trt.cpp">
@@ -71,9 +80,6 @@
     <ClCompile Include="..\src\classify\classify.cpp">
       <Filter>src\classify</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\unet\unet.cpp">
-      <Filter>src\unet</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\yolo\yolo_detector.cpp">
       <Filter>src\yolo</Filter>
     </ClCompile>
@@ -86,8 +92,17 @@
     <ClCompile Include="..\src\yolov5\yolov5_detector.cpp">
       <Filter>src\yolov5</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\unet\unet.cpp">
+      <Filter>src\unet</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\CenterFace\CenterFace_detector.cpp">
       <Filter>src\CenterFace</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\yolor\yolor_detector.cpp">
+      <Filter>src\yolor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\retinaface\retinaface_detector.cpp">
+      <Filter>src\retinaface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
