@@ -166,13 +166,13 @@ public:
 	}
 };
 
-int main_classify()
+int main()
 //int main()
 {
 	Classify m_Classify;
 	Config m_config;
 	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_classify\\resnet18-v2-7.onnx";
-	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_classify\\resnet18-v2-7_int8_batch_1.engine";
+	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_classify\\resnet18-v2-7_fp32_batch_1.engine";
 	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_classify\\images\\";
 	m_config.calibration_width = 224;
 	m_config.calibration_height = 224;
@@ -188,7 +188,7 @@ int main_classify()
 	float all_time = 0.0;
 	time_t start = time(0);
 	Timer timer;
-	int m = 100;
+	int m = 2000;
 	for (int i = 0; i < m; i++)
 	{
 		clock_t start, end;

@@ -638,12 +638,12 @@ public:
 	}
 };
 
-int main()
+int main_RetinaFaceDectector()
 {
 	RetinaFaceDectector m_RetinaFaceDectector;
 	Config m_config;
 	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\mxnet_onnx_tensorrt_retinaface\\mnet.25-512x512-batchsize_1.onnx";
-	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\mxnet_onnx_tensorrt_retinaface\\mnet.25-512x512-int8_batchsize_1.engine";
+	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\mxnet_onnx_tensorrt_retinaface\\mnet.25-512x512-fp32_batchsize_1.engine";
 	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\mxnet_onnx_tensorrt_retinaface\\image\\";
 	m_config.maxBatchSize = 1;
 	m_config.mode = 2;
@@ -661,7 +661,7 @@ int main()
 	float all_time = 0.0;
 	time_t start = time(0);
 	Timer timer;
-	int m = 100;
+	int m = 1000;
 	for (int i = 0; i < m; i++)
 	{
 		//timer.reset();

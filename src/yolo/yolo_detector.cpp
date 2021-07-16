@@ -595,16 +595,16 @@ public:
 	}
 };
 
-int main_yolo()
+int main_YoloDectector()
 {
 	YoloDectector m_YoloDectector;
 	Config m_config;
 	m_config.cfgFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\yolov3.cfg";
 	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\yolov3.onnx";
-	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\yolov3_int8_batch_1.engine";
+	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\yolov3_fp32_batch_1.engine";
 	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\image\\";
 	m_config.maxBatchSize = 1;
-	m_config.mode = 1;
+	m_config.mode = 0;
 	m_YoloDectector.init(m_config);
 	std::vector<BatchResult> batch_res;
 	std::vector<cv::Mat> batch_img;
@@ -619,7 +619,7 @@ int main_yolo()
 	float all_time = 0.0;
 	time_t start = time(0);
 	Timer timer;
-	int m = 100;
+	int m = 1000;
 	for (int i = 0; i < m; i++)
 	{
 		//timer.reset();

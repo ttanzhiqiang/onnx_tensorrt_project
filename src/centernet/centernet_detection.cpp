@@ -5,13 +5,13 @@
 #include "Trt.h"
 #include "ctdetLayer.h"
 #include "class_timer.hpp"
-struct Result
+struct CenterNetResult
 {
 	int		 id = -1;
 	float	 prob = 0.f;
 	cv::Rect rect;
 };
-typedef std::vector<Result> BatchResult;
+typedef std::vector<CenterNetResult> BatchResult;
 class CenterNetDectector
 {
 public:
@@ -275,11 +275,11 @@ public:
 			{
 				continue;
 			}
-			std::vector<Result> vec_result(0);
+			std::vector<CenterNetResult> vec_result(0);
 			vec_result.reserve(remaining.size());
 			for (const auto& b : remaining)
 			{
-				Result res;
+				CenterNetResult res;
 				res.id = b.label;
 				res.prob = b.prob;
 				const int x = b.box.x1;
@@ -295,7 +295,7 @@ public:
 	}
 };
 
-int main_CenterNet()
+int main_CenterNetDectector()
 {
 	CenterNetDectector m_CenterNetDectector;
 	Config m_config;
@@ -319,7 +319,7 @@ int main_CenterNet()
 	float all_time = 0.0;
 	time_t start = time(0);
 	Timer timer;
-	int m = 100;
+	int m = 200;
 	for (int i = 0; i < m; i++)
 	{
 		//timer.reset();

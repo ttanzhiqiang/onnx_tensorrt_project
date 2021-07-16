@@ -4,13 +4,13 @@
 #include <common.h>
 #include "Trt.h"
 #include "class_timer.hpp"
-struct Result
+struct Yolov5Result
 {
 	int		 id = -1;
 	float	 prob = 0.f;
 	cv::Rect rect;
 };
-typedef std::vector<Result> BatchResult;
+typedef std::vector<Yolov5Result> BatchResult;
 class Yolov5Dectector
 {
 public:
@@ -430,10 +430,10 @@ public:
 			{
 				continue;
 			}
-			std::vector<Result> vec_result(0);
+			std::vector<Yolov5Result> vec_result(0);
 			for (const auto& b : remaining)
 			{
-				Result res;
+				Yolov5Result res;
 				res.id = b.label;
 				res.prob = b.prob;
 				const int x = b.box.x1;
@@ -449,12 +449,12 @@ public:
 	}
 };
 
-int main_Yolov5Dectector()
+int main_yolov5()
 {
 	Yolov5Dectector m_Yolov5Dectector;
 	Config m_config;
 	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_yolov5\\yolov5x.sim.onnx";
-	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_yolov5\\yolov5x_sim_int8_batch_1.engine";
+	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_yolov5\\yolov5x_sim_fp32_batch_1.engine";
 	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\image\\";
 	m_config.maxBatchSize = 1;
 	m_config.mode = 2;
@@ -474,7 +474,7 @@ int main_Yolov5Dectector()
 	float all_time = 0.0;
 	time_t start = time(0);
 	Timer timer;
-	int m = 100;
+	int m = 200;
 	for (int i = 0; i < m; i++)
 	{
 		//timer.reset();

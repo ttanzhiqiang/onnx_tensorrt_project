@@ -279,7 +279,7 @@ public:
 	}
 };
 
-int main_CenterFace()
+int main_CenterFaceDectector()
 {
 	CenterFaceDectector m_CenterFaceDectector;
 	Config m_config;
@@ -304,7 +304,7 @@ int main_CenterFace()
 	Timer timer;
 	std::vector<cv::String> m_list;
 	cv::glob(m_config.calibration_image_list_file, m_list);
-	int m = 100;
+	int m = 200;
 	for (int i = 0; i < m; i++)
 	{
 		cv::Mat image = cv::imread(m_list[0]);

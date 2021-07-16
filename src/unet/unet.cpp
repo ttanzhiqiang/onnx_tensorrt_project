@@ -232,9 +232,9 @@ int main_unet()
 
 	UnetParser m_Unet;
 	Config m_config;
-	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\unet\\unet_three.onnx";
-	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\unet\\unet_three_int8_batch_1.engine";
-	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\unet\\images\\";
+	m_config.onnxModelpath = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_unet\\unet_three.onnx";
+	m_config.engineFile = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_unet\\unet_three_fp32_batch_1.engine";
+	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_unet\\images\\";
 	m_config.calibration_width = 512;
 	m_config.calibration_height = 512;
 	m_config.maxBatchSize = 1;
@@ -265,14 +265,14 @@ int main_unet()
 	m_Unet.init(m_config);
 	std::vector<BatchResult> batch_res;
 	std::vector<cv::Mat> batch_img;
-	std::string filename = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\unet\\images\\000346.jpg";
+	std::string filename = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\pytorch_onnx_tensorrt_unet\\images\\000346.jpg";
 	cv::Mat image = cv::imread(filename);
 	batch_img.push_back(image);
 
 	float all_time = 0.0;
 	time_t start = time(0);
 	Timer timer;
-	int m = 100;
+	int m = 200;
 	for (int i = 0; i < m; i++)
 	{
 		//timer.reset();
