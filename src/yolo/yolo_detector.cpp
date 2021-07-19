@@ -4,13 +4,13 @@
 #include <common.h>
 #include "Trt.h"
 #include "class_timer.hpp"
-struct Result
+struct YoloResult
 {
 	int		 id = -1;
 	float	 prob = 0.f;
 	cv::Rect rect;
 };
-typedef std::vector<Result> BatchResult;
+typedef std::vector<YoloResult> BatchResult;
 class YoloDectector
 {
 public:
@@ -576,10 +576,10 @@ public:
 			{
 				continue;
 			}
-			std::vector<Result> vec_result(0);
+			std::vector<YoloResult> vec_result(0);
 			for (const auto& b : remaining)
 			{
-				Result res;
+				YoloResult res;
 				res.id = b.label;
 				res.prob = b.prob;
 				const int x = b.box.x1;
@@ -595,7 +595,7 @@ public:
 	}
 };
 
-int main_YoloDectector()
+int main()
 {
 	YoloDectector m_YoloDectector;
 	Config m_config;
@@ -619,7 +619,7 @@ int main_YoloDectector()
 	float all_time = 0.0;
 	time_t start = time(0);
 	Timer timer;
-	int m = 1000;
+	int m = 2;
 	for (int i = 0; i < m; i++)
 	{
 		//timer.reset();
@@ -641,6 +641,7 @@ int main_YoloDectector()
 	//disp
 	for (int i = 0; i < batch_img.size(); ++i)
 	{
+		int sca_i = 0;
 		for (const auto& r : batch_res[i])
 		{
 			std::cout << "batch " << i << " id:" << r.id << " prob:" << r.prob << " rect:" << r.rect << std::endl;
@@ -648,6 +649,7 @@ int main_YoloDectector()
 			std::stringstream stream;
 			stream << std::fixed << std::setprecision(2) << "id:" << r.id << "  score:" << r.prob;
 			cv::putText(batch_img[i], stream.str(), cv::Point(r.rect.x, r.rect.y - 5), 0, 0.5, cv::Scalar(0, 0, 255), 2);
+			sca_i++;
 		}
 		cv::imshow("image" + std::to_string(i), batch_img[i]);
 	}
