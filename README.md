@@ -93,7 +93,7 @@ you have the trained model file from the darknet/libtorch/pytorch/mxnet
 |   yolov5 5s    | 640x640 | 2080ti | 24.47ms | 22.46ms | 22.38ms |       720/666/652       |
 |   yolov5 5m    | 640x640 | 2080ti | 30.61ms | 24.02ms | 23.73ms |       851/728/679       |
 |   yolov5 5l    | 640x640 | 2080ti | 32.58ms | 25.84ms | 24.44ms |      1154/834/738       |
-|   /yolov5 5x   | 640x640 | 2080ti | 40.69ms | 29.81ms | 27.19ms |      1530/1001/827      |
+|   yolov5 5x    | 640x640 | 2080ti | 40.69ms | 29.81ms | 27.19ms |      1530/1001/827      |
 |  yolor_csp_x   | 512x512 | 2080ti | 27.89ms | 20.54ms | 18.71ms |      2373/1060/853      |
 |   yolor_csp    | 512x512 | 2080ti | 21.30ms | 18.06ms | 17.03ms |      1720/856/763       |
 |   darknet53    | 224*224 | 2080ti | 3.53ms  | 1.84ms  | 1.71ms  |      1005/769/658       |
