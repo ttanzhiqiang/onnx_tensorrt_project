@@ -21,6 +21,7 @@ public:
 	uint32_t m_InputSize;
 	int m_Classes;
 	uint32_t m_BatchSize = 1;
+	float conf_thresh = 0.4;
 	float m_NMSThresh = 0.2;
 	int _n_yolo_ind = 0;
 	std::vector<TensorInfo> m_OutputTensors;
@@ -140,7 +141,7 @@ public:
 			BBoxInfo box;
 			auto max_pos = std::max_element(row + 5, row + m_Classes + 5);
 			box.prob = Logist(row[4]) * Logist(row[max_pos - row]);
-			if (box.prob < 0.5)
+			if (box.prob < conf_thresh)
 				continue;
 			box.classId = max_pos - row - 5;
 			box.label = max_pos - row - 5;
@@ -354,6 +355,8 @@ public:
 		_config = config;
 		onnx_net = std::make_shared<Trt>();
 		onnx_net->SetMaxBatchSize(config.maxBatchSize);
+		conf_thresh = config.conf_thresh;
+		m_NMSThresh = config.m_NMSThresh;
 		if (config.mode == 2)
 		{
 			isInt8(config.calibration_image_list_file, config.calibration_width, config.calibration_height);
@@ -442,6 +445,8 @@ int main_yolor()
 	m_config.mode = 2;
 	m_config.calibration_width = 512;
 	m_config.calibration_height = 512;
+	m_config.conf_thresh = 0.5;
+	m_config.m_NMSThresh = 0.2;
 	m_YolorDectector.init(m_config);
 	std::vector<BatchResult> batch_res;
 	std::vector<cv::Mat> batch_img;

@@ -21,10 +21,10 @@ public:
 	uint32_t m_InputC;
 	uint32_t m_InputSize;
 	uint32_t m_BatchSize = 1;
+	float conf_thresh = 0.4;
 	float m_NMSThresh = 0.2;
 	int m_Classes;
 	int m_kernelSize = 3;
-	const float m_Threshold = 0.3;
 	std::vector<std::string> m_ClassNames;
 	std::vector<TensorInfo> m_OutputTensors;
 	cudaStream_t mCudaStream;
@@ -153,6 +153,8 @@ public:
 		_config = config;
 		onnx_net = std::make_shared<Trt>();
 		onnx_net->SetMaxBatchSize(config.maxBatchSize);
+		conf_thresh = config.conf_thresh;
+		m_NMSThresh = config.m_NMSThresh;
 		if (config.mode == 2)
 		{
 			isInt8(config.calibration_image_list_file, config.calibration_width, config.calibration_height);
@@ -194,7 +196,7 @@ public:
 			const float* m_reg_hostBuffer = static_cast<const float*>(onnx_net->mBinding[2]) + i_BatchSize * m_OutputTensors[1].volume / m_BatchSize;
 			const float* m_wh_hostBuffer = static_cast<const float*>(onnx_net->mBinding[3]) + i_BatchSize * m_OutputTensors[2].volume / m_BatchSize;
 			CTdetforward_gpu(m_hm_hostBuffer, m_reg_hostBuffer, m_wh_hostBuffer, static_cast<float*>(cudaOutputBuffer),
-				m_InputW / 4, m_InputH / 4, m_Classes, m_kernelSize, m_Threshold);
+				m_InputW / 4, m_InputH / 4, m_Classes, m_kernelSize, conf_thresh);
 			//CUDA_CHECK(cudaMemcpyAsync(outputData.get(), cudaOutputBuffer, outputBufferSize, cudaMemcpyDeviceToHost, mCudaStream));
 			cudaMemcpyAsync(outputData.get(), cudaOutputBuffer, outputBufferSize, cudaMemcpyDeviceToHost, mCudaStream);
 			std::vector<BBoxInfo> result;
@@ -306,6 +308,8 @@ int main_CenterNetDectector()
 	m_config.mode = 1;
 	m_config.calibration_width = 512;
 	m_config.calibration_height = 512;
+	m_config.conf_thresh = 0.5;
+	m_config.m_NMSThresh = 0.2;
 	m_CenterNetDectector.init(m_config);
 	std::vector<BatchResult> batch_res;
 	std::vector<cv::Mat> batch_img;

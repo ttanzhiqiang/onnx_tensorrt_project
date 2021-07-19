@@ -84,6 +84,8 @@ struct Config
     int mode; //0£¬1£¬2
 
     float conf_thresh = 0.6;
+
+    float m_NMSThresh = 0.2;
     //std::string calibration_image_list_file_txt = "configs/calibration_images.txt";
     LabelNameColorMap ncp;
 };

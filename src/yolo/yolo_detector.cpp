@@ -20,6 +20,7 @@ public:
 	uint32_t m_InputC;
 	uint32_t m_InputSize;
 	uint32_t m_BatchSize = 1;
+	float conf_thresh = 0.4;
 	float m_NMSThresh = 0.2;
 	int _n_yolo_ind = 0;
 	std::vector<std::string> m_ClassNames;
@@ -159,7 +160,7 @@ public:
 					}
 					maxProb = objectness * maxProb;
 
-					if (maxProb > 0.2)//m_ProbThresh
+					if (maxProb > conf_thresh)//m_ProbThresh
 					{
 						add_bbox_proposal(bx, by, bw, bh, tensor.stride_h, tensor.stride_w, scale_h, scale_w, xOffset, yOffset, maxIndex, maxProb, imageW, imageH, binfo);
 					}
@@ -518,6 +519,8 @@ public:
 		m_configBlocks = parseConfigFile(config.cfgFile);
 		parseConfigBlocks();
 		onnx_net->SetMaxBatchSize(config.maxBatchSize);
+		conf_thresh = config.conf_thresh;
+		m_NMSThresh = config.m_NMSThresh;
 		if (config.mode == 2)
 		{
 			isInt8(config.calibration_image_list_file);
@@ -605,6 +608,8 @@ int main()
 	m_config.calibration_image_list_file = "D:\\onnx_tensorrt\\onnx_tensorrt_centernet\\onnx_tensorrt_project\\model\\darknet_onnx_tensorrt_yolo\\image\\";
 	m_config.maxBatchSize = 1;
 	m_config.mode = 0;
+	m_config.conf_thresh = 0.4;
+	m_config.m_NMSThresh = 0.2;
 	m_YoloDectector.init(m_config);
 	std::vector<BatchResult> batch_res;
 	std::vector<cv::Mat> batch_img;

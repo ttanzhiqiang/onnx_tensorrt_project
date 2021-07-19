@@ -166,7 +166,7 @@ public:
 	}
 };
 
-int main()
+int main_Classify()
 //int main()
 {
 	Classify m_Classify;

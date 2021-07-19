@@ -552,6 +552,7 @@ public:
 			isInt8(config.calibration_image_list_file, config.calibration_width, config.calibration_height);
 		}
 		conf_thresh = config.conf_thresh;
+		m_NMSThresh = config.m_NMSThresh;
 		m_BatchSize = config.maxBatchSize;
 		onnx_net->CreateEngine(config.onnxModelpath, config.engineFile, config.customOutput, config.maxBatchSize, config.mode);
 		//¸üÐÂm_OutputTensors
@@ -650,6 +651,7 @@ int main_RetinaFaceDectector()
 	m_config.calibration_width = 512;
 	m_config.calibration_height = 512;
 	m_config.conf_thresh = 0.2;
+	m_config.m_NMSThresh = 0.2;
 	m_RetinaFaceDectector.init(m_config);
 	std::vector<BatchResult> batch_res;
 	std::vector<cv::Mat> batch_img;

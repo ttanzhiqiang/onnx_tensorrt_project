@@ -22,7 +22,7 @@ public:
 	int m_Classes;
 	uint32_t m_BatchSize = 1;
 	float m_NMSThresh = 0.2;
-	float obj_threshold = 0.2;
+	float conf_thresh = 0.2;
 	int _n_yolo_ind = 0;
 	std::vector<TensorInfo> m_OutputTensors;
 	std::vector<std::map<std::string, std::string>> m_configBlocks;
@@ -117,7 +117,7 @@ public:
 			for (int i = 0; i < m_InputH / 4; i++) {
 				for (int j = 0; j < m_InputW / 4; j++) {
 					int current = i * m_InputW / 4 + j;
-					if (score[current] > obj_threshold) {
+					if (score[current] > conf_thresh) {
 						FaceRes headbox;
 						headbox.confidence = score[current];
 						headbox.face_box.h = std::exp(scale0[current]) * 4 * ratio;
@@ -193,7 +193,8 @@ public:
 			isInt8(config.calibration_image_list_file, config.calibration_width, config.calibration_height);
 		}
 		m_BatchSize = config.maxBatchSize;
-		obj_threshold = config.conf_thresh;
+		conf_thresh = config.conf_thresh;
+		m_NMSThresh = config.m_NMSThresh;
 		onnx_net->CreateEngine(config.onnxModelpath, config.engineFile, config.customOutput, config.maxBatchSize, config.mode);
 		//¸üÐÂm_OutputTensors
 		UpdateOutputTensor();
@@ -289,6 +290,7 @@ int main_CenterFaceDectector()
 	m_config.maxBatchSize = 1;
 	m_config.mode = 0;
 	m_config.conf_thresh = 0.5;
+	m_config.m_NMSThresh = 0.2;
 	m_config.calibration_width = 640;
 	m_config.calibration_height = 640;
 	m_CenterFaceDectector.init(m_config);
