@@ -1,10 +1,10 @@
 # ONNX-TensorRT
 
-# Yolov5(4.0)/Yolov5(5.0)/YoloR/Yolov4/Yolov3/CenterNet/CenterFace/RetinaFace/Classify/Unet Implementation
+# Yolov5(4.0)/Yolov5(5.0)/YoloR/YoloX/Yolov4/Yolov3/CenterNet/CenterFace/RetinaFace/Classify/Unet Implementation
 
 
 
-Yolov4/Yolov3/Yolov5/yolor
+Yolov4/Yolov3/Yolov5/yolor/YoloX
 
 - ![](./model/result/yolo_result.png)
 -  
@@ -46,6 +46,7 @@ you have the trained model file from the darknet/libtorch/pytorch/mxnet
 - [x] yolov4 , yolov4-tiny
 - [x] yolov3 , yolov3-tiny
 - [x] yolor
+- [x] YoloX
 - [x] centernet
 - [x] Unet
 - [x] CenterFace
