@@ -63,7 +63,7 @@ you have the trained model file from the darknet/libtorch/pytorch/mxnet
 
   onnx-tensorrt batch inference : onnx re-export(batch:2)
 
-- [x] support FP32,FP16,INT8
+- [x] support FP32(m_config.mode = 0),FP16(m_config.mode = 1),INT8(m_config.mode = 2)
 
 - [x] dynamic input size(tiny_tensorrt_dyn_onnx)
 
