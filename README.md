@@ -142,6 +142,8 @@ you have the trained model file from the darknet/libtorch/pytorch/mxnet
 
     step4: tortoiseGit->apply patch serial and choose **0001-Compile-onnx-tensorrt-by-MSVC-on-Windows.patch**
 
+    ​			look https://github.com/ttanzhiqiang/onnx-tensorrt_7.2.1
+    
     step5:build onnx.lib\onnx_proto.lib\nvonnxparser.dll\nvonnxparser_static.lib
 
 ## Model and 3rdparty
